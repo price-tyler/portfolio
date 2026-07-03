@@ -1,0 +1,105 @@
+---
+title: "Job Search Automation Pipeline"
+designation: "PRJ-002"
+summary: "A multi-module Python application that scrapes engineering job boards, scores every listing with a locally-hosted LLM against weighted criteria, and generates tailored resumes and cover letters — built because applying to internships manually doesn't scale."
+status: "operational"
+tags: ["Python", "Automation", "LLM Integration", "Data Pipeline"]
+date: "2026-06"
+featured: true
+order: 2
+metrics:
+  - label: "Pipeline stages"
+    value: "4"
+  - label: "Job boards"
+    value: "3"
+  - label: "AI scoring"
+    value: "Local LLM"
+  - label: "Applications shipped"
+    value: "4+"
+todos:
+  - "Public GitHub repository link (clean up repo + README first)"
+  - "Screenshot of the ranked Excel output"
+---
+
+## Overview
+
+Finding an engineering internship means monitoring multiple job boards,
+evaluating hundreds of postings against your actual qualifications, and
+writing tailored application documents for each one worth pursuing. Done
+manually, that's hours per week of low-value clicking. So I built a system
+that does it.
+
+The tool scrapes Indeed, LinkedIn, and USAJobs, stores everything in a SQLite
+database, scores each listing with a locally-hosted language model against
+weighted criteria, exports a ranked spreadsheet, and generates tailored
+resumes and cover letters for the listings worth applying to. It is
+operational and has produced real applications to Chromalox, Sure Steel, and
+Parker Hannifin.
+
+## Problem Statement
+
+Convert "check five job sites every day and guess what's worth applying to"
+into a ranked, quantified pipeline that surfaces the best-fit opportunities
+automatically — and cut the marginal cost of a quality application to near
+zero.
+
+## Architecture
+
+```text
+job-search/
+├── main.py             — pipeline entry point
+├── config.yaml         — search parameters, scoring weights, AI provider
+└── src/
+    ├── scrapers/       — Indeed/LinkedIn (jobspy), USAJobs API
+    ├── storage/        — SQLite persistence layer
+    ├── ai/             — provider abstraction: Ollama local / cloud APIs
+    ├── analysis/       — job analyzer + weighted scorer
+    ├── export/         — ranked Excel report generator
+    ├── resume/         — tailored resume generator (.docx)
+    └── cover_letter/   — cover letter generator (.docx)
+```
+
+The AI layer is a **provider abstraction** — the scoring model runs on Ollama
+(llama3.2:3b) locally for zero cost, but the same interface can point at any
+cloud API. Swapping models is a config change, not a refactor.
+
+## Scoring Model
+
+Each listing gets a composite score from explicitly weighted criteria:
+
+| Criterion | Weight | What it measures |
+| --- | --- | --- |
+| Skill match | 30% | Overlap between posting requirements and my actual skills |
+| Education match | 25% | Degree level and field fit |
+| Experience level | 20% | Intern/entry-level vs. roles wanting 5 years |
+| Location | 15% | Distance from Logan, UT (60 mi radius) or remote |
+| Salary | 10% | Against a $15/hr floor |
+
+The weights are deliberate: a great skill match in the wrong state beats a
+mediocre match next door, because relocation is solvable and skill gaps
+aren't.
+
+## Engineering Decisions
+
+- **Local LLM over cloud API.** Scoring hundreds of listings through a paid API costs real money; llama3.2:3b on my own hardware costs nothing and is accurate enough for ranking. Right-sizing the model to the task *is* the engineering.
+- **SQLite over flat files.** Dedup across runs, incremental scraping, and queryable history — without running a database server.
+- **Excel as the output format.** The consumer of this data is a human making apply/skip decisions. A ranked spreadsheet beats a web dashboard I'd have to build and maintain.
+- **Config-driven everything.** Keywords, radius, weights, and providers live in `config.yaml`. Retargeting the search from internships to full-time roles in 2029 is an edit, not a rewrite.
+
+## Results
+
+- Operational end-to-end: scrape → store → score → rank → generate documents
+- Produced ranked reports covering engineering internships within 60 miles of Logan plus remote listings
+- Generated the tailored resumes and cover letters behind 4 submitted applications (Chromalox ×2, Sure Steel, Parker Hannifin)
+
+## Lessons Learned
+
+- **Scrapers are maintenance, not code.** Job boards change markup and add rate limits; building on the jobspy library where possible beat hand-rolling everything.
+- **Prompt output needs guardrails.** Small local models return malformed scoring output more often than cloud models — the analysis layer validates and retries rather than trusting the first response.
+- **Automating the pipeline doesn't automate the judgment.** The tool ranks; I still decide. Keeping the human decision at the end was a design choice, not a limitation.
+
+## Future Improvements
+
+- Application status tracking (applied → response → interview) in the same database
+- Scheduled runs with a diff report: "12 new listings since Tuesday, 2 above your score threshold"
+- Public release with a proper README once the repo is cleaned up

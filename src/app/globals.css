@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design tokens — mission-control dark theme
+   Single source of truth for color, spacing rhythm, and type.
+   ============================================================ */
+:root {
+  --background: #05080f;
+  --surface: #0a0f1a;
+  --surface-raised: #0e1524;
+  --line: rgba(148, 163, 184, 0.14);
+  --line-strong: rgba(148, 163, 184, 0.28);
+  --foreground: #e2e8f0;
+  --muted: #8b98ab;
+  --faint: #5b6778;
+  --accent: #ffb020;
+  --accent-dim: rgba(255, 176, 32, 0.14);
+  --grid-line: rgba(96, 130, 182, 0.07);
+  --grid-line-major: rgba(96, 130, 182, 0.12);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: #05080f;
+}
+
+/* Blueprint grid — fixed backdrop layer, pure CSS (no canvas cost) */
+.blueprint-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-line-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-major) 1px, transparent 1px);
+  background-size:
+    24px 24px,
+    24px 24px,
+    120px 120px,
+    120px 120px;
+}
+
+/* Crosshair corner ticks for panel components */
+.panel-ticks {
+  position: relative;
+}
+.panel-ticks::before,
+.panel-ticks::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--line-strong);
+  border-style: solid;
+  pointer-events: none;
+  transition: border-color 200ms ease;
+}
+.panel-ticks::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+.panel-ticks::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+.panel-ticks:hover::before,
+.panel-ticks:hover::after {
+  border-color: var(--accent);
+}
+
+/* Long-form MDX article styling — reads like a technical report */
+.report h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  counter-increment: report-section;
+}
+.report h2::before {
+  content: counter(report-section, decimal-leading-zero);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.15em;
+}
+.report {
+  counter-reset: report-section;
+}
+.report h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.report p {
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 1.1rem;
+}
+.report strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.report a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255, 176, 32, 0.4);
+}
+.report ul,
+.report ol {
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0 0 1.25rem 1.25rem;
+}
+.report ul {
+  list-style: square;
+}
+.report ol {
+  list-style: decimal;
+}
+.report li {
+  margin-bottom: 0.4rem;
+  padding-left: 0.25rem;
+}
+.report li::marker {
+  color: var(--accent);
+}
+.report code {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.85em;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  color: var(--foreground);
+}
+.report pre {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1.1rem 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.report pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--muted);
+}
+.report table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+.report th {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+.report td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+.report blockquote {
+  border-left: 2px solid var(--accent);
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  margin: 1.5rem 0;
+  color: var(--foreground);
+  font-style: italic;
+}
+
+/* TODO content markers — visually loud on purpose so they get replaced */
+.todo-marker {
+  border: 1px dashed rgba(255, 176, 32, 0.5);
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+}
+
+/* Reduced motion: kill smooth scroll; components check the media query for JS animation */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

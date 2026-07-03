@@ -1,0 +1,128 @@
+---
+title: "Dual-Wheel Pickleball Launcher"
+designation: "PRJ-001"
+summary: "A two-motor ball launcher designed from scratch to a hard $100 cost ceiling — motor sizing, drive-wheel contact mechanics, and a 12V power system, with a test campaign comparing predicted vs. measured trajectories."
+status: "in-development"
+tags: ["Mechanical Design", "Electromechanical", "Dynamics", "Design-to-Cost"]
+date: "2026-06"
+featured: true
+order: 1
+metrics:
+  - label: "BOM cost"
+    value: "< $100"
+  - label: "Drive motors"
+    value: "2× 775 DC"
+  - label: "Bus voltage"
+    value: "12V"
+  - label: "Commercial equivalent"
+    value: "$150–400"
+todos:
+  - "Build photos of frame, motor mounts, and wiring"
+  - "Measured launch velocity and range data vs. predictions"
+  - "Video of first launch test"
+---
+
+## Overview
+
+Commercial pickleball launchers sell for $150–400. Mechanically, they are two DC
+motors spinning rubber wheels in opposite directions with a ball fed between
+them. That gap between what the machine *is* and what it *costs* is an
+engineering opportunity — so this project sets a hard constraint: **a working
+launcher for under $100**, designed and documented like a real product, not a
+weekend hack.
+
+The project has two objectives. First, it's a complete mechanical engineering
+exercise at small scale — requirements, component sizing, cost management,
+build, and a test campaign that checks predictions against reality. Second, if
+v1 holds up, the ~$95 bill of materials against a $175–200 selling price is a
+real margin on a real product.
+
+## Problem Statement
+
+Design and build a machine that can repeatedly launch a standard pickleball
+(74 mm diameter, ~24 g) at controllable speed, powered from a portable 12V
+source, with total component cost under $100.
+
+## Design Constraints
+
+| Constraint | Value | Driver |
+| --- | --- | --- |
+| Total BOM cost | < $100 | Project requirement — forces real engineering tradeoffs |
+| Ball compatibility | 74 mm pickleball | Standard equipment, non-negotiable |
+| Power source | 12V battery, portable | Courts don't have outlets |
+| Speed control | Continuously variable | A launcher with one speed is a novelty, not a training tool |
+| Fabrication | Hand tools, scrap lumber | No machine shop access — design must respect that |
+
+## Working Principle
+
+Two rubber wheels counter-rotate with a gap slightly smaller than the ball.
+The ball drops in, both wheel surfaces grip it, and it accelerates through the
+contact zone to (ideally) the wheel surface speed. Spin is controlled by
+running the wheels at different speeds — equal speeds launch flat, a
+differential adds topspin or backspin.
+
+**Contact geometry.** With 76 mm drive wheels and a 74 mm ball, the wheel gap
+is set to 65–68 mm — compressing the ball by 6–9 mm. Too little squeeze and
+the wheels slip instead of gripping; too much and the ball binds and stalls
+the motors. This one dimension carries most of the design risk, so the motor
+mounts are slotted to make the gap tunable during testing.
+
+**Launch velocity.** The ceiling on launch speed is wheel surface speed:
+
+```text
+v_surface = ω · r = (RPM · 2π / 60) · 0.038 m
+
+775 motor, no load @ 12V:  ~10,000–13,000 RPM  →  ~40–52 m/s surface speed
+Under load (realistic):     a fraction of that — this is what testing measures
+```
+
+Real launch velocity will land well below the no-load ceiling because of motor
+sag under load, slip in the contact zone, and energy spent compressing the
+ball. Quantifying that gap — predicted vs. measured — is the point of the
+test campaign.
+
+## Component Selection
+
+Every part is a cost-vs-capability decision documented against the $100 cap:
+
+| Subsystem | Selection | Cost | Rationale |
+| --- | --- | --- | --- |
+| Drive motors (×2) | 775-class 12V DC | $33.98 | Best torque-per-dollar in hobby DC motors; ubiquitous mounting pattern |
+| Motor drivers | BTS7960 43A H-bridge (×2) | $15.38 | Massively over-rated for the load — headroom instead of magic smoke |
+| Drive wheels | 76 mm / 82A inline skate wheels | $13.99 | Correct diameter and durometer for grip; $3.50/wheel vs. $20+ for "launcher wheels" |
+| Battery | 12V 4Ah sealed lead-acid | $16.79 | Cheapest portable 12V that handles motor inrush; weight is acceptable on a cart |
+| Charger | 12V 1.3A smart SLA charger | $6.69 | Set-and-forget charging |
+| Frame | Scrap 2×4 lumber | ~$0 | Stiff, workable with hand tools, free |
+| Hardware | M4/M5 fasteners, mounts | ~$8 | — |
+
+**Running total: ~$95.** The discipline here isn't finding cheap parts — it's
+knowing which specs matter (wheel durometer, driver current headroom) and
+which don't (frame material, aesthetics) at this stage.
+
+## Engineering Process
+
+1. **Requirements first.** Speed range, portability, and cost were fixed before any part was picked.
+2. **Physics before parts.** Wheel-speed-to-launch-velocity math sized the motors; contact mechanics sized the wheel gap.
+3. **Design for tuning.** The highest-uncertainty parameter (wheel gap) gets slotted mounts, not a fixed dimension — because the first analysis is always somewhat wrong, and good designs admit it.
+4. **Test against prediction.** The build phase ends with measured range and velocity data plotted against the projectile-motion model.
+
+## Test Campaign (planned)
+
+- Launch velocity measurement via slow-motion video against a distance reference
+- Range vs. motor PWM duty cycle, mapped across the throttle range
+- Predicted vs. actual trajectory using standard projectile motion with a drag estimate
+- Repeatability: shot-to-shot dispersion at fixed settings — the number that decides whether this is a *product* or a *prototype*
+
+## Status & Next Steps
+
+Design phase is complete and the BOM is finalized. Current phase: procurement
+and frame build. After v1 testing, planned iterations include a ball hopper
+and feed mechanism, elevation adjustment, and a microcontroller-based control
+upgrade (replacing manual PWM with programmable shot sequences).
+
+## Lessons So Far
+
+Design-to-cost is a different sport than design-to-performance. A $400
+launcher is easy. Deleting 75% of the cost while keeping the function forced
+every component to justify itself — which is a much better simulation of real
+engineering work than an unconstrained build would have been.

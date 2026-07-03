@@ -1,0 +1,49 @@
+---
+title: "Cellular Automata Experiments"
+designation: "PRJ-004"
+summary: "Conway's Game of Life implemented in Python, then rebuilt as an interactive 2D simulation in Unity/C# — small experiments in emergent behavior from simple rules."
+status: "archived"
+tags: ["Python", "C#", "Unity", "Simulation"]
+date: "2024"
+featured: false
+order: 4
+metrics:
+  - label: "Implementations"
+    value: "2"
+  - label: "Languages"
+    value: "Python, C#"
+todos:
+  - "GIF or screenshot of the Unity simulation running"
+  - "Link to source if published on GitHub"
+---
+
+## Overview
+
+Cellular automata are the cheapest possible demonstration of a deep idea:
+complex, unpredictable global behavior emerging from trivially simple local
+rules. Conway's Game of Life runs on four rules about a cell's neighbors —
+and produces gliders, oscillators, and patterns that took mathematicians
+decades to catalog.
+
+I built it twice. First in Python during programming coursework at Centralia
+College — grid state management, neighbor counting, and generation stepping.
+Then rebuilt as an interactive 2D version in Unity with C#, which turned a
+console exercise into a real-time simulation problem: frame-rate-independent
+update ticks, efficient grid rendering, and user interaction with the running
+system.
+
+## Why It's Here
+
+It's a small project and it stays honestly labeled as one. But it marks two
+things: the start of programming as a genuine interest rather than a course
+requirement, and a first pass at the simulation mindset — discretize a
+system, define update rules, step it forward, watch what emerges — that
+scales up to the numerical methods used everywhere in engineering analysis.
+
+## What Carried Forward
+
+- Array/grid state management and neighbor-search logic that later made
+  scraper data structures feel easy
+- The Python fluency that became the [job search pipeline](/projects/job-search-tool)
+- Enough C# to be dangerous in Unity — dormant, but on the bench for future
+  simulation or visualization work
