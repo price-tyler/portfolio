@@ -15,8 +15,8 @@ export const site = {
   tagline:
     "I like problems that end with a working machine — and I document the engineering it took to get there.",
   email: "tyler.price.usu@gmail.com",
-  /* TODO(Tyler): add real profile URLs, then delete the placeholder flags below. */
-  github: null as string | null, // e.g. "https://github.com/username"
+  github: "https://github.com/price-tyler" as string | null,
+  /* TODO(Tyler): add LinkedIn profile URL, then delete this comment. */
   linkedin: null as string | null, // e.g. "https://linkedin.com/in/username"
   /** Set true once public/resume.pdf is the version you want recruiters downloading. */
   resumePdfReady: true,
