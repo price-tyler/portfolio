@@ -5,15 +5,14 @@ import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import type { TimelineEntry, TimelineKind } from "@/data/timeline";
 
-const kindConfig: Record<
-  TimelineKind,
-  { label: string; dot: string; text: string }
-> = {
-  education: { label: "Education", dot: "bg-sky-400", text: "text-sky-400" },
-  work: { label: "Work", dot: "bg-emerald-400", text: "text-emerald-400" },
-  project: { label: "Projects", dot: "bg-accent", text: "text-accent" },
-  milestone: { label: "Milestones", dot: "bg-violet-400", text: "text-violet-400" },
-  target: { label: "Targets", dot: "bg-slate-400", text: "text-slate-400" },
+/* Colors come from theme-aware CSS variables (see globals.css) so the
+   palette flips with light/dark mode. */
+const kindConfig: Record<TimelineKind, { label: string; cssVar: string }> = {
+  education: { label: "Education", cssVar: "--c-education" },
+  work: { label: "Work", cssVar: "--c-work" },
+  project: { label: "Projects", cssVar: "--c-project" },
+  milestone: { label: "Milestones", cssVar: "--c-milestone" },
+  target: { label: "Targets", cssVar: "--c-target" },
 };
 
 const filters: Array<{ key: TimelineKind | "all"; label: string }> = [
@@ -79,15 +78,18 @@ export function TimelineView({ entries }: { entries: TimelineEntry[] }) {
                 {/* Node */}
                 <span
                   aria-hidden
+                  style={{ color: `var(${cfg.cssVar})` }}
                   className={`absolute -left-[5px] top-1.5 h-[9px] w-[9px] rounded-full ${
                     entry.future
-                      ? `border ${cfg.text} border-current bg-background`
-                      : cfg.dot
+                      ? "border border-current bg-background"
+                      : "bg-current"
                   }`}
                 />
                 <p className="font-mono text-[0.68rem] tracking-[0.18em] text-muted uppercase">
                   {entry.date}
-                  <span className={`ml-3 ${cfg.text}`}>{cfg.label}</span>
+                  <span className="ml-3" style={{ color: `var(${cfg.cssVar})` }}>
+                    {cfg.label}
+                  </span>
                   {entry.future && (
                     <span className="ml-3 opacity-60">— planned</span>
                   )}

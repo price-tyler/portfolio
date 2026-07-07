@@ -55,6 +55,9 @@ export function Starfield({ density = 0.00012 }: { density?: number }) {
     };
 
     const draw = (t: number) => {
+      // Theme-aware star color: light specks on dark sky, dark on light.
+      const light = document.documentElement.classList.contains("light");
+      const starColor = light ? "#3b4a63" : "#cdd8e8";
       ctx.clearRect(0, 0, width, height);
       for (const s of stars) {
         // Slow leftward drift with wraparound; sinusoidal twinkle.
@@ -63,8 +66,8 @@ export function Starfield({ density = 0.00012 }: { density?: number }) {
         const alpha = reduced
           ? s.baseAlpha
           : s.baseAlpha * (0.7 + 0.3 * Math.sin(t * 0.0008 + s.phase));
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = "#cdd8e8";
+        ctx.globalAlpha = light ? alpha * 0.55 : alpha;
+        ctx.fillStyle = starColor;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
@@ -80,9 +83,20 @@ export function Starfield({ density = 0.00012 }: { density?: number }) {
       raf = requestAnimationFrame(draw);
     }
 
+    // Under reduced motion there's no animation loop, so redraw the static
+    // frame when the theme class changes on <html>.
+    const themeObserver = new MutationObserver(() => {
+      if (reduced) draw(0);
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
     window.addEventListener("resize", resize);
     return () => {
       cancelAnimationFrame(raf);
+      themeObserver.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, [density]);

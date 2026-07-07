@@ -81,20 +81,13 @@ export function getFeaturedProjects(): Project[] {
   return getAllProjects().filter((p) => p.featured);
 }
 
+/* Badge colors live in globals.css as theme-aware classes (.status-*) so
+   they flip correctly between dark and light mode. */
 export const statusConfig: Record<
   ProjectStatus,
   { label: string; className: string }
 > = {
-  operational: {
-    label: "OPERATIONAL",
-    className: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10",
-  },
-  "in-development": {
-    label: "IN DEVELOPMENT",
-    className: "text-amber-400 border-amber-400/30 bg-amber-400/10",
-  },
-  archived: {
-    label: "ARCHIVED",
-    className: "text-slate-400 border-slate-400/30 bg-slate-400/10",
-  },
+  operational: { label: "OPERATIONAL", className: "status-operational" },
+  "in-development": { label: "IN DEVELOPMENT", className: "status-indev" },
+  archived: { label: "ARCHIVED", className: "status-archived" },
 };

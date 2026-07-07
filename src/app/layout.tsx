@@ -36,9 +36,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col">
+        {/* Apply saved theme before first paint — prevents dark→light flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("theme")==="light")document.documentElement.classList.add("light")}catch(e){}`,
+          }}
+        />
         {/* Fixed blueprint backdrop behind everything */}
         <div aria-hidden className="blueprint-grid fixed inset-0 -z-10" />
         <Header />

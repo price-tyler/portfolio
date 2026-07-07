@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { navLinks, site } from "@/data/site";
+import { navLinks } from "@/data/site";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 /**
  * Sticky site header: mono wordmark, indexed nav links, active-route
@@ -31,6 +32,9 @@ export function Header() {
         {/* Desktop nav */}
         <nav aria-label="Primary" className="hidden md:block">
           <ul className="flex items-center gap-6">
+            <li>
+              <ThemeToggle />
+            </li>
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
@@ -51,16 +55,19 @@ export function Header() {
           </ul>
         </nav>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          className="md:hidden font-mono text-xs tracking-widest text-muted hover:text-foreground"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? "[ CLOSE ]" : "[ MENU ]"}
-        </button>
+        {/* Mobile controls */}
+        <div className="flex items-center gap-4 md:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="font-mono text-xs tracking-widest text-muted hover:text-foreground"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? "[ CLOSE ]" : "[ MENU ]"}
+          </button>
+        </div>
       </div>
 
       {/* Mobile nav */}
