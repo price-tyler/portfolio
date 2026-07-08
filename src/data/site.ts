@@ -21,7 +21,7 @@ export const site = {
   resumePdfReady: true,
   metaDescription:
     "Tyler Price — Mechanical Engineering student (Aerospace emphasis) at Utah State University. Projects in hardware design, Python automation, and web development.",
-  url: "https://example.com", // TODO(Tyler): set the deployed domain for SEO/OG tags
+  url: "https://portfolio-nu-two.vercel.app",
 } as const;
 
 export const navLinks = [
