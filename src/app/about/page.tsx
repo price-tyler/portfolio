@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { TodoMarker } from "@/components/ui/TodoMarker";
 import { Reveal } from "@/components/ui/Reveal";
+import { site } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -18,11 +19,24 @@ export default function AboutPage() {
         title="About"
       />
 
-      <div className="mb-10">
-        {/* TODO(Tyler): replace with <Image> once a professional headshot exists at public/headshot.jpg */}
-        <TodoMarker
-          items={["Professional headshot → save as public/headshot.jpg and swap into this page"]}
-        />
+      <div className="mb-12 flex flex-col items-start gap-6 sm:flex-row sm:items-end">
+        <div className="panel-ticks border border-line bg-surface/60 p-1.5">
+          <Image
+            src="/profile.jpg"
+            alt={`${site.name} — portrait`}
+            width={224}
+            height={224}
+            priority
+            className="h-44 w-44 object-cover sm:h-56 sm:w-56"
+          />
+        </div>
+        <p className="font-mono text-[0.65rem] leading-relaxed tracking-[0.18em] text-muted uppercase">
+          {site.name}
+          <br />
+          {site.location} · {site.coordinates}
+          <br />
+          {site.university}
+        </p>
       </div>
 
       <div className="report space-y-0">
