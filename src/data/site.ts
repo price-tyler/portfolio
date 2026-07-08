@@ -21,7 +21,7 @@ export const site = {
   resumePdfReady: true,
   metaDescription:
     "Tyler Price — Mechanical Engineering student (Aerospace emphasis) at Utah State University. Projects in hardware design, Python automation, and web development.",
-  url: "https://portfolio-nu-two.vercel.app",
+  url: "https://tylerprice.vercel.app",
 } as const;
 
 export const navLinks = [
